@@ -75,7 +75,8 @@ class Recommender:
         for item in content:
             popularity_score = self.calculate_popularity_score(item)
             recentness_score = self.calculate_recentness_score(item)
-            item_score = self.popularity_factor * popularity_score + self.recentness_factor * recentness_score
+            item_score = self.popularity_factor * popularity_score + \
+                self.recentness_factor * recentness_score
             ranked_content.append({
                 "item": item,
                 "score": item_score
@@ -141,7 +142,8 @@ class UserInterface:
         filtered_content = self.content_filter.filter_content(content)
         ranked_content = self.recommender.rank_content(filtered_content)
         for item in ranked_content:
-            additional_data = self.external_api_integration.get_additional_data(item)
+            additional_data = self.external_api_integration.get_additional_data(
+                item)
             item["additional_data"] = additional_data
         for item in ranked_content:
             print("Title:", item["item"]["title"])
@@ -150,7 +152,8 @@ class UserInterface:
             print("Additional Data:", item["additional_data"])
             print("---")
             score = input("Rate the relevance of this item (1-5): ")
-            self.user_feedback.provide_feedback(item["item"], round(float(score)))
+            self.user_feedback.provide_feedback(
+                item["item"], round(float(score)))
             self.user_feedback.learn_from_feedback()
             data_updater = DataUpdater()
             data_updater.check_for_updates()
