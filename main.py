@@ -43,11 +43,11 @@ class NaturalLanguageProcessor:
         self.topic_model = pipeline("text-classification")
 
     def analyze_sentiment(self, text):
-        sentiment = self.sentiment_model(text)
+        sentiment = self.sentiment_model(text)[0]  # Fixed the indexing
         return sentiment
 
     def analyze_topic(self, text):
-        topic = self.topic_model(text)
+        topic = self.topic_model(text)[0]  # Fixed the indexing
         return topic
 
 
@@ -60,7 +60,7 @@ class ContentFilter:
         filtered_content = []
         for item in content:
             sentiment = self.nlp_processor.analyze_sentiment(item["summary"])
-            if sentiment[0]["score"] > self.relevance_threshold:
+            if sentiment["score"] > self.relevance_threshold:  # Fixed the key access
                 filtered_content.append(item)
         return filtered_content
 
@@ -143,7 +143,7 @@ class UserInterface:
         ranked_content = self.recommender.rank_content(filtered_content)
         for item in ranked_content:
             additional_data = self.external_api_integration.get_additional_data(
-                item)
+                item["item"])
             item["additional_data"] = additional_data
         for item in ranked_content:
             print("Title:", item["item"]["title"])
